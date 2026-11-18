@@ -93,8 +93,13 @@ class _HomePageState extends State<HomePage> {
     double? rate = double.tryParse(_rateController.text.trim());
 
     // Check input values
-    if (weight == null || rate == null || weight < 0 || rate < 0) {
+    if (weight == null || rate == null) {
       _showMessage('Please enter valid numbers.');
+      return;
+    }
+
+    if (weight < 0 || rate < 0) {
+      _showMessage('Weight and rate cannot be negative.');
       return;
     }
 
@@ -227,7 +232,47 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(color: Color(0xFF9CAFC4), fontSize: 14),
             ),
 
-            const SizedBox(height: 25),
+            // Helpful Notice
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFF17243B),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF2563EB)),
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Color(0xFF60A5FA)),
+                      SizedBox(width: 8),
+                      Text(
+                        'Important Information',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    'Economy allowance: 20 kg\n'
+                    'Business allowance: 40 kg\n'
+                    'Service tax: 8%\n\n'
+                    'Enter your baggage weight, select your '
+                    'ticket class and enter the rate per kg. '
+                    'Then press Calculate Fee.',
+                    style: TextStyle(color: Color(0xFFD1D5DB), height: 1.5),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
 
             // Baggage Information Card
             Card(
