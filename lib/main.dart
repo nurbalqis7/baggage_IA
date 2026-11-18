@@ -14,21 +14,46 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Baggage Fee Calculator',
 
-      // Cute pastel theme
+      // Dark blue and black theme
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFFFF5F7),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF0B1220),
 
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD98EAC)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2563EB),
+          brightness: Brightness.dark,
+        ),
 
         // Application font
-        textTheme: GoogleFonts.nunitoTextTheme(),
+        textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme),
 
         // AppBar style
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFE8B9CA),
-          foregroundColor: Color(0xFF704B61),
+          backgroundColor: Color(0xFF111827),
+          foregroundColor: Colors.white,
           centerTitle: true,
+          elevation: 0,
+        ),
+
+        // Input field style
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFF263449),
+          hintStyle: const TextStyle(color: Color(0xFF9CAFC4)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+        ),
+
+        // Card style
+        cardTheme: CardThemeData(
+          color: const Color(0xFF17243B),
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
         ),
       ),
 
@@ -51,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController _rateController = TextEditingController();
 
-  // Ticket class
+  // Selected ticket class
   String _ticketClass = 'Economy';
 
   // Calculation results
@@ -67,33 +92,33 @@ class _HomePageState extends State<HomePage> {
 
     double? rate = double.tryParse(_rateController.text.trim());
 
-    // Check input
+    // Check input values
     if (weight == null || rate == null || weight < 0 || rate < 0) {
       _showMessage('Please enter valid numbers.');
       return;
     }
 
-    // Baggage allowance
+    // Determine baggage allowance
     double allowance = 20;
 
     if (_ticketClass == 'Business') {
       allowance = 40;
     }
 
-    // Excess baggage weight
+    // Calculate excess baggage weight
     double excess = weight - allowance;
 
     if (excess < 0) {
       excess = 0;
     }
 
-    // Excess baggage charge
+    // Calculate excess baggage charge
     double charge = excess * rate;
 
     // Calculate 8% service tax
     double tax = charge * 0.08;
 
-    // Total amount payable
+    // Calculate total amount payable
     double total = charge + tax;
 
     setState(() {
@@ -120,12 +145,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Show error message
+  // Display error message
   void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: const Color(0xFFB97999),
+        backgroundColor: const Color(0xFF2563EB),
       ),
     );
   }
@@ -141,9 +166,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF5F7),
+      backgroundColor: const Color(0xFF0B1220),
 
-      // AppBar
+      // Application title bar
       appBar: AppBar(
         title: const Text(
           'Baggage Fee Calculator',
@@ -178,19 +203,19 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 10),
 
-            // Application Icon
-            const Icon(Icons.luggage, size: 75, color: Color(0xFFB97999)),
+            // Application icon
+            const Icon(Icons.luggage, size: 75, color: Color(0xFF60A5FA)),
 
             const SizedBox(height: 10),
 
-            // Application Heading
+            // Application heading
             const Text(
               'Excess Baggage Calculator',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF704B61),
+                color: Colors.white,
               ),
             ),
 
@@ -199,19 +224,13 @@ class _HomePageState extends State<HomePage> {
             const Text(
               'Calculate your excess baggage fee easily!',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF98758A), fontSize: 14),
+              style: TextStyle(color: Color(0xFF9CAFC4), fontSize: 14),
             ),
 
             const SizedBox(height: 25),
 
             // Baggage Information Card
             Card(
-              color: Colors.white,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-
               child: Padding(
                 padding: const EdgeInsets.all(20),
 
@@ -223,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF704B61),
+                        color: Colors.white,
                       ),
                     ),
 
@@ -239,21 +258,13 @@ class _HomePageState extends State<HomePage> {
 
                     TextField(
                       controller: _weightController,
+                      style: const TextStyle(color: Colors.white),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter baggage weight',
-                        prefixIcon: const Icon(
-                          Icons.scale,
-                          color: Color(0xFFB97999),
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xFFFFF5F7),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
+                        prefixIcon: Icon(Icons.scale, color: Color(0xFF60A5FA)),
                       ),
                     ),
 
@@ -269,16 +280,12 @@ class _HomePageState extends State<HomePage> {
 
                     DropdownButtonFormField<String>(
                       initialValue: _ticketClass,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
+                      dropdownColor: const Color(0xFF17243B),
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(
                           Icons.airplane_ticket,
-                          color: Color(0xFFB97999),
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xFFFFF5F7),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                          color: Color(0xFF60A5FA),
                         ),
                       ),
 
@@ -313,20 +320,15 @@ class _HomePageState extends State<HomePage> {
 
                     TextField(
                       controller: _rateController,
+                      style: const TextStyle(color: Colors.white),
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter rate per kg',
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.payments,
-                          color: Color(0xFFB97999),
-                        ),
-                        filled: true,
-                        fillColor: const Color(0xFFFFF5F7),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                          color: Color(0xFF60A5FA),
                         ),
                       ),
                     ),
@@ -337,7 +339,6 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: double.infinity,
                       height: 52,
-
                       child: ElevatedButton.icon(
                         onPressed: _calculateFee,
                         icon: const Icon(Icons.calculate),
@@ -349,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFD98EAC),
+                          backgroundColor: const Color(0xFF2563EB),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -364,14 +365,13 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       width: double.infinity,
                       height: 48,
-
                       child: OutlinedButton.icon(
                         onPressed: _resetCalculator,
                         icon: const Icon(Icons.refresh),
                         label: const Text('Reset'),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFFB97999),
-                          side: const BorderSide(color: Color(0xFFD98EAC)),
+                          foregroundColor: const Color(0xFF60A5FA),
+                          side: const BorderSide(color: Color(0xFF3B82F6)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -388,12 +388,6 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 25),
 
               Card(
-                color: Colors.white,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                ),
-
                 child: Padding(
                   padding: const EdgeInsets.all(20),
 
@@ -404,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF704B61),
+                          color: Colors.white,
                         ),
                       ),
 
@@ -432,17 +426,16 @@ class _HomePageState extends State<HomePage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(18),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8EAF0),
+                          color: const Color(0xFF263B5A),
                           borderRadius: BorderRadius.circular(12),
                         ),
-
                         child: Column(
                           children: [
                             const Text(
                               'TOTAL AMOUNT PAYABLE',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF704B61),
+                                color: Color(0xFF93C5FD),
                               ),
                             ),
 
@@ -453,7 +446,7 @@ class _HomePageState extends State<HomePage> {
                               style: const TextStyle(
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFFB97999),
+                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -472,21 +465,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Display result in a row
+  // Display calculation results
   Widget _resultRow(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Text(title)),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(color: Color(0xFFD1D5DB)),
+            ),
+          ),
 
           Text(
             value,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Color(0xFF704B61),
+              color: Colors.white,
             ),
           ),
         ],
@@ -501,19 +498,17 @@ class AboutPage extends StatelessWidget {
 
   // Open GitHub Repository
   Future<void> _openGitHub() async {
-    final Uri url = Uri.parse(
-      'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY',
-    );
+    final Uri url = Uri.parse('https://github.com/nurbalqis7/baggage_IA');
 
-    await launchUrl(url);
+    await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF5F7),
+      backgroundColor: const Color(0xFF0B1220),
 
-      // AppBar
+      // About Page AppBar
       appBar: AppBar(
         title: const Text(
           'About Application',
@@ -525,10 +520,7 @@ class AboutPage extends StatelessWidget {
             icon: const Icon(Icons.menu),
             onSelected: (String value) {
               if (value == 'Home') {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                Navigator.pop(context);
               }
             },
             itemBuilder: (context) => const [
@@ -551,16 +543,14 @@ class AboutPage extends StatelessWidget {
             Container(
               height: 125,
               width: 125,
-
               decoration: BoxDecoration(
-                color: const Color(0xFFEADCF5),
+                color: const Color(0xFF17243B),
                 borderRadius: BorderRadius.circular(28),
               ),
-
               child: const Icon(
                 Icons.luggage,
                 size: 80,
-                color: Color(0xFFB97999),
+                color: Color(0xFF60A5FA),
               ),
             ),
 
@@ -573,7 +563,7 @@ class AboutPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 23,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF704B61),
+                color: Colors.white,
               ),
             ),
 
@@ -583,7 +573,7 @@ class AboutPage extends StatelessWidget {
               'Calculate your excess baggage fee easily '
               'before travelling.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF98758A), fontSize: 14),
+              style: TextStyle(color: Color(0xFF9CAFC4), fontSize: 14),
             ),
 
             const SizedBox(height: 35),
@@ -596,7 +586,7 @@ class AboutPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF704B61),
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -604,23 +594,22 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 15),
 
             // Student Name
-            _infoCard(Icons.person, 'Name', 'YOUR NAME'),
+            _infoCard(Icons.person, 'Name', 'NUR BALQIS BINTI AZLY SHAM'),
 
             // Matric Number
-            _infoCard(Icons.badge, 'Matric Number', 'YOUR MATRIC NUMBER'),
+            _infoCard(Icons.badge, 'Matric Number', '2024229506'),
 
             // Course
-            _infoCard(Icons.school, 'Course', 'YOUR COURSE'),
+            _infoCard(Icons.school, 'Course', 'CDCS251'),
 
             const SizedBox(height: 25),
 
-            // GitHub Section
             const Text(
               'Source Code',
               style: TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF704B61),
+                color: Colors.white,
               ),
             ),
 
@@ -630,7 +619,6 @@ class AboutPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: 52,
-
               child: ElevatedButton.icon(
                 onPressed: _openGitHub,
                 icon: const Icon(Icons.code),
@@ -638,9 +626,8 @@ class AboutPage extends StatelessWidget {
                   'View GitHub Repository',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD98EAC),
+                  backgroundColor: const Color(0xFF2563EB),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -651,7 +638,7 @@ class AboutPage extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            const Divider(),
+            const Divider(color: Color(0xFF374151)),
 
             const SizedBox(height: 12),
 
@@ -660,15 +647,15 @@ class AboutPage extends StatelessWidget {
               '© 2026 Excess Baggage Fee Calculator. '
               'All Rights Reserved.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Color(0xFF98758A)),
+              style: TextStyle(fontSize: 13, color: Color(0xFF9CAFC4)),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
             const Text(
               'Developed for Mobile Technology Assignment.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Color(0xFF98758A)),
+              style: TextStyle(fontSize: 12, color: Color(0xFF9CAFC4)),
             ),
 
             const SizedBox(height: 15),
@@ -681,24 +668,17 @@ class AboutPage extends StatelessWidget {
   // Display author information
   static Widget _infoCard(IconData icon, String title, String value) {
     return Card(
-      color: Colors.white,
-      elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
-
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFFB97999), size: 28),
-
+        leading: Icon(icon, color: const Color(0xFF60A5FA), size: 28),
         title: Text(
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(0xFF704B61),
+            color: Colors.white,
           ),
         ),
-
-        subtitle: Text(value),
+        subtitle: Text(value, style: const TextStyle(color: Color(0xFF9CAFC4))),
       ),
     );
   }
